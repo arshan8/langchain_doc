@@ -94,6 +94,54 @@ plt.grid(True)
 plt.subplot(1, 2, 2)
 plt.plot(accuracy_history, label='Train Accuracy')
 plt.plot(test_accuracy_history, label='Test Accuracy')
+
+
+
+
+
+import numpy as np
+from sklearn.utils.extmath import approx_fprime
+
+# Define scalar function f: ℝⁿ → ℝ
+def f(x):
+    return np.sum(x**2 + 3*x)  # Example: f(x, y) = x² + y² + 3x + 3y
+
+# Gradient = Jacobian for scalar-valued functions
+def compute_jacobian(f, x, epsilon=1e-6):
+    return approx_fprime(x, f, epsilon)
+
+# Numerical Hessian
+def compute_hessian(f, x, epsilon=1e-5):
+    n = len(x)
+    hessian = np.zeros((n, n))
+    fx = f(x)
+    for i in range(n):
+        x_i1 = x.copy()
+        x_i1[i] += epsilon
+        f_i1 = f(x_i1)
+
+        for j in range(n):
+            x_ij = x_i1.copy()
+            x_ij[j] += epsilon
+            f_ij = f(x_ij)
+
+            x_j1 = x.copy()
+            x_j1[j] += epsilon
+            f_j1 = f(x_j1)
+
+            hessian[i, j] = (f_ij - f_i1 - f_j1 + fx) / (epsilon ** 2)
+    return hessian
+
+# Test input
+x0 = np.array([1.0, 2.0])
+
+# Compute
+jac = compute_jacobian(f, x0)
+hess = compute_hessian(f, x0)
+
+print("Jacobian (Gradient):", jac)
+print("Hessian:\n", hess)
+
 plt.title('Accuracy Over Epochs')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
