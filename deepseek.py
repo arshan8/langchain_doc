@@ -2,13 +2,13 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv()  # Loads the .env file where your OPENAI_API_KEY is stored
 
-model = ChatOpenAI(
+llm = ChatOpenAI(
     model="deepseek/deepseek-r1-0528:free",
-    api_key=os.getenv("OPENROUTER_API_KEY"),  #.igno
-    base_url="https://openrouter.ai/api/v1"
+    api_key=os.environ["OPENAI_API_KEY"],
+    base_url="https://openrouter.ai/api/v1",
 )
 
-result = model.invoke('tell me about bmsce')
-print(result.content)
+response = llm.invoke("Tell me about BMSCE.")
+print(response.content)
